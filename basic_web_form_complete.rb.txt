@@ -1,0 +1,42 @@
+#File: basic_web_form_complete.rb.txt
+#2 tests, 2 assertions, 1 failure
+
+require 'selenium-webdriver'
+require 'test/unit'
+
+class TestWebFormComplete < Test::Unit::TestCase
+
+	#loads url before each test
+	def setup
+		@driver = Selenium::WebDriver.for :chrome
+		@form_url = @driver.get "https://docs.google.com/forms/d/181whJlBduFo5qtDbxkBDWHjNQML5RutvHWOCjEFWswY/viewform"
+	end	
+
+	#what is your name? *required
+	#find and enter a value in name textbox; test for [required] value 
+
+	def test_name
+		@driver.find_element(:id => "entry_1041466219").send_keys "Raina Clancey"
+
+		assert(element = @driver.find_element(:id => "entry_1041466219")['value'] != '')
+	end
+
+	#do you enjoy development? *required
+	#find 'Yes' checkbox; if not checked, test that 'No' is [checked]
+
+	def test_enjoy
+
+		element = @driver.find_element(:id, "group_310473641_1")
+
+		if element.selected? == false
+			assert(element = @driver.find_element(:id => "group_310473641_2")['selected'], "You must select Yes or No!")
+		end
+	end
+
+
+
+	#runs after each test, closing URL
+	def teardown
+		@driver.quit
+	end
+end
